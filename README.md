@@ -1,10 +1,10 @@
 # RoboticArm182
 
-Trabalho de Ciências - Semáforo com Motorzinho
+Trabalho de Ciências - RoboticArm182 (Leap Motion)
 
 - Arthur Silveira
 - Miguel Oliveira
-- Bryan
+- Bryan Silva
 
 ## Instalação
 
