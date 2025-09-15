@@ -34,3 +34,10 @@ python examples/tracking_event_example.py
 cd LeapArm182
 python LeapArm182.py
 ```
+
+## Referências
+
+- [Nosso melhor robô de todos os tempos! | Manual do Mundo](https://youtu.be/Ecw3kCo4AdQ?si=dr4IAW8p5_25UdDK)
+- [MeArm | Thingiverse](https://www.thingiverse.com/thing:360108)
+- [Arduino](https://www.arduino.cc/)
+- [Ultraleap](https://www.ultraleap.com/)

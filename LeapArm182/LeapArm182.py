@@ -37,39 +37,44 @@ class MyListener(leap.Listener):
         print(f"Dispositivo encontrado: {info.serial}")
 
     def on_tracking_event(self, event):
-        if event.tracking_frame_id % 10 == 0:
-            if len(event.hands):
-                hand = event.hands[0]  # Primeira mão da lista (esquerda ou direita)
+        if len(event.hands):
+            hand = event.hands[0]  # Primeira mão da lista (esquerda ou direita)
 
-                palma_da_mao = clamp(hand.grab_strength)  # 0=aberta, 1=fechado
-                garra = int(GARRA_ABERTA + palma_da_mao * (GARRA_FECHADA - GARRA_ABERTA))
+            palma_da_mao = clamp(hand.grab_strength)  # 0=aberta, 1=fechado
+            garra = int(GARRA_ABERTA + palma_da_mao * (GARRA_FECHADA - GARRA_ABERTA))
 
-                x_norm = clamp((hand.palm.position.x + 250.0) / 500.0)  # -250 a 250
-                rotacao = int(ROT_ESQ - x_norm * (ROT_ESQ - ROT_DIR))
-                
-                z_norm = 1.0 - clamp((hand.palm.position.z + 120.0) / 240.0)  # -120 a 120
-                ataque = int(ATAQUE_RECUO + z_norm * (ATAQUE_AVANCO - ATAQUE_RECUO))
-                
-                y_norm = clamp((hand.palm.position.y - 150.0) / 200.0)  # 150 a 350
-                altura = int(ALTURA_BAIXO + y_norm * (ALTURA_CIMA - ALTURA_BAIXO))
-                
-                # Imprime os valores normalizados
-                print(
-                    f"Rotação: {x_norm:.3f} | Ataque: {z_norm:.3f} | Altura: {y_norm:.3f} | Palma: {palma_da_mao:.3f})"
-                )
-                
-                pacote = bytes([garra, rotacao, ataque, altura])
-                arduino.write(bytes(pacote))
+            x_norm = clamp((hand.palm.position.x + 250.0) / 500.0)  # -250 a 250
+            rotacao = int(ROT_ESQ - x_norm * (ROT_ESQ - ROT_DIR))
+            
+            z_norm = 1.0 - clamp((hand.palm.position.z + 120.0) / 240.0)  # -120 a 120
+            ataque = int(ATAQUE_RECUO + z_norm * (ATAQUE_AVANCO - ATAQUE_RECUO))
+            
+            y_norm = clamp((hand.palm.position.y - 150.0) / 200.0)  # 150 a 350
+            altura = int(ALTURA_BAIXO + y_norm * (ALTURA_CIMA - ALTURA_BAIXO))
+            
+            # Imprime os valores normalizados
+            print(
+                f"Rotação: {x_norm:.3f} | Ataque: {z_norm:.3f} | Altura: {y_norm:.3f} | Palma: {palma_da_mao:.3f})"
+            )
+            
+            pacote = bytes([garra, rotacao, ataque, altura])
+            arduino.write(bytes(pacote))
 
-            else:
-                # Nenhuma mão posicionada, coloca no centro do movimento em todos os eixos
-                pacote = bytes([
-                    int(GARRA_ABERTA + (GARRA_FECHADA - GARRA_ABERTA) / 2),
-                    int(ROT_DIR + (ROT_ESQ - ROT_DIR) / 2),
-                    int(ATAQUE_RECUO + (ATAQUE_AVANCO - ATAQUE_RECUO) / 2),
-                    int(ALTURA_BAIXO + (ALTURA_CIMA - ALTURA_BAIXO) / 2)
-                ])
-                arduino.write(bytes(pacote))
+        else:
+            # Nenhuma mão posicionada, coloca no centro do movimento em todos os eixos
+            # pacote = bytes([
+            #     int(GARRA_ABERTA + (GARRA_FECHADA - GARRA_ABERTA) / 2),
+            #     int(ROT_DIR + (ROT_ESQ - ROT_DIR) / 2),
+            #     int(ATAQUE_RECUO + (ATAQUE_AVANCO - ATAQUE_RECUO) / 2),
+            #     int(ALTURA_BAIXO + (ALTURA_CIMA - ALTURA_BAIXO) / 2)
+            # ])
+            pacote = bytes([
+                int(90),
+                int(90),
+                int(90),
+                int(90)
+            ])
+            arduino.write(bytes(pacote))
 
 
 def main():
